@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة الكول سنتر</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container dashboard">
+        <h2>لوحة تحكم الكول سنتر 🎧</h2>
+        <div class="filters">
+            <button onclick="loadDoctors()">تحديث حالات الدكاترة 🔄</button>
+        </div>
+
+        <table id="doctorsTable">
+            <thead>
+                <tr>
+                    <th>الدكتور</th>
+                    <th>التخصص</th>
+                    <th>الفرع</th>
+                    <th>الحالة</th>
+                    <th>إجراء</th>
+                </tr>
+            </thead>
+            <tbody id="doctorsBody">
+            </tbody>
+        </table>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // تحميل الداتا أول ما الصفحة تفتح
+        window.onload = loadDoctors;
+        // تحديث تلقائي كل 30 ثانية
+        setInterval(loadDoctors, 30000); 
+    </script>
+</body>
+
+</html>

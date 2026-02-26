@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>بوابة الطبيب</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container doctor-panel">
+        <h2>مرحباً دكتور 👨‍⚕️</h2>
+        <div class="actions">
+            <button class="btn-in" onclick="checkInOut('in')">🟢 بدء الشيفت (Check-in)</button>
+            <button class="btn-out" onclick="checkInOut('out')">🔴 إنهاء الشيفت (Check-out)</button>
+        </div>
+        <p id="statusMsg"></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
