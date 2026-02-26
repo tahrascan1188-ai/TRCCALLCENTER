@@ -3,20 +3,118 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة الطبيب</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .doctor-panel {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .action-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 32px 24px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .card-in {
+            color: var(--success);
+            border-left: 6px solid var(--success);
+        }
+
+        .card-in:hover {
+            background-color: rgba(16, 185, 129, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.1);
+        }
+
+        .card-out {
+            color: var(--danger);
+            border-left: 6px solid var(--danger);
+        }
+
+        .card-out:hover {
+            background-color: rgba(239, 68, 68, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.1);
+        }
+
+        .icon-large {
+            font-size: 32px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container doctor-panel">
-        <h2>مرحباً دكتور 👨‍⚕️</h2>
-        <div class="actions">
-            <button class="btn-in" onclick="checkInOut('in')">🟢 بدء الشيفت (Check-in)</button>
-            <button class="btn-out" onclick="checkInOut('out')">🔴 إنهاء الشيفت (Check-out)</button>
+        <div style="font-size: 64px; color: var(--primary); margin-bottom: 16px;">
+            <i class="ph-fill ph-user-circle"></i>
         </div>
-        <p id="statusMsg"></p>
+        <h2>مرحباً بك يا دكتور</h2>
+        <p style="color: var(--text-muted); margin-bottom: 32px;">الرجاء تسجيل حالة الحضور الخاصة بك</p>
+
+        <div class="actions">
+            <!-- Big Action Cards -->
+            <div class="action-card card-in" onclick="checkInOut('in')">
+                <i class="ph-fill ph-check-circle icon-large"></i>
+                بدء الشيفت (متاح)
+            </div>
+
+            <div class="action-card card-out" onclick="checkInOut('out')">
+                <i class="ph-fill ph-x-circle icon-large"></i>
+                إنهاء الشيفت (غير متاح)
+            </div>
+        </div>
+
+        <div id="statusMsg" style="padding: 16px; border-radius: 8px; margin-top:24px;"></div>
     </div>
+
     <script src="script.js"></script>
+    <script>
+        // Override checkInOut to show better UI alerts
+        const originalCheckInOut = checkInOut;
+        checkInOut = async function (type) {
+            const statusMsg = document.getElementById('statusMsg');
+            statusMsg.innerHTML = "<i class='ph ph-spinner ph-spin'></i> جاري التسجيل...";
+            statusMsg.style.backgroundColor = 'transparent';
+            statusMsg.style.color = 'var(--text-main)';
+
+            try {
+                let response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'checkInOut', type: type })
+                });
+
+                let result = await response.json();
+
+                if (type === 'in') {
+                    statusMsg.innerHTML = `<i class="ph-fill ph-check-circle"></i> ${result.message}`;
+                    statusMsg.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                    statusMsg.style.color = 'var(--success)';
+                } else {
+                    statusMsg.innerHTML = `<i class="ph-fill ph-check-circle"></i> ${result.message}`;
+                    statusMsg.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                    statusMsg.style.color = 'var(--danger)';
+                }
+            } catch (error) {
+                statusMsg.innerHTML = "<i class='ph-fill ph-warning'></i> حدث خطأ أثناء التسجيل. تأكد من الاتصال.";
+                statusMsg.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+                statusMsg.style.color = 'var(--warning)';
+            }
+        };
+    </script>
 </body>
 
 </html>

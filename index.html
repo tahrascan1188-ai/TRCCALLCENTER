@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - النظام الطبي</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
+
 <body>
     <div class="container login-box">
+        <div style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">
+            <i class="ph-fill ph-stethoscope"></i>
+        </div>
         <h2>تسجيل الدخول</h2>
+        <p style="color: var(--text-muted); margin-bottom: 24px;">مرحباً بك في النظام الطبي والإداري</p>
+
         <input type="email" id="email" placeholder="البريد الإلكتروني (جرب: admin@test.com)">
         <input type="password" id="password" placeholder="كلمة المرور (جرب: 123)">
-        <button onclick="login()">دخول</button>
+
+        <button onclick="login()">دخول للنظام <i class="ph ph-sign-in"
+                style="vertical-align: middle; margin-right: 8px;"></i></button>
         <p id="msg" class="error"></p>
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>

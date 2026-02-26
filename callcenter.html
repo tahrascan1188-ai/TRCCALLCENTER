@@ -3,36 +3,85 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة الكول سنتر</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 
-<body>
+<body style="align-items: flex-start;">
     <div class="container dashboard">
-        <h2>لوحة تحكم الكول سنتر 🎧</h2>
-        <div class="filters">
-            <button onclick="loadDoctors()">تحديث حالات الدكاترة 🔄</button>
+        <div class="dashboard-header">
+            <h2><i class="ph-fill ph-headset"
+                    style="color: var(--primary); vertical-align: middle; margin-left: 8px;"></i> لوحة تحكم الكول سنتر
+            </h2>
+            <div class="filters">
+                <button onclick="loadDoctors()"><i class="ph ph-arrows-clockwise"
+                        style="vertical-align: middle; margin-left: 8px;"></i> تحديث الحالات</button>
+            </div>
         </div>
 
-        <table id="doctorsTable">
-            <thead>
-                <tr>
-                    <th>الدكتور</th>
-                    <th>التخصص</th>
-                    <th>الفرع</th>
-                    <th>الحالة</th>
-                    <th>إجراء</th>
-                </tr>
-            </thead>
-            <tbody id="doctorsBody">
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table id="doctorsTable">
+                <thead>
+                    <tr>
+                        <th>الدكتور</th>
+                        <th>التخصص</th>
+                        <th>الفرع</th>
+                        <th>الحالة</th>
+                        <th>إجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="doctorsBody">
+                    <!-- Data will be injected here via JS -->
+                </tbody>
+            </table>
+        </div>
     </div>
     <script src="script.js"></script>
     <script>
-        // تحميل الداتا أول ما الصفحة تفتح
+        // Update the loadDoctors function specifically for the badges on this page
+        const originalLoadDoctors = loadDoctors;
+        loadDoctors = async function () {
+            const tbody = document.getElementById('doctorsBody');
+            tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'><i class='ph ph-spinner ph-spin' style='font-size:24px; color:var(--primary);'></i> جاري تحميل البيانات...</td></tr>";
+
+            try {
+                let response = await fetch(API_URL + "?action=getDoctors");
+                let doctors = await response.json();
+
+                tbody.innerHTML = "";
+                doctors.forEach(doc => {
+                    // Convert raw text status to badges
+                    let badgeClass = 'status-away';
+                    let cleanStatus = doc.status;
+
+                    if (doc.status.includes('موجود') && !doc.status.includes('غير')) {
+                        badgeClass = 'status-online';
+                        cleanStatus = '<i class="ph-fill ph-check-circle"></i> متاح الآن';
+                    } else if (doc.status.includes('غير موجود')) {
+                        badgeClass = 'status-offline';
+                        cleanStatus = '<i class="ph-fill ph-x-circle"></i> غير متاح';
+                    } else if (doc.status.includes('إجازة')) {
+                        badgeClass = 'status-away';
+                        cleanStatus = '<i class="ph-fill ph-calendar-blank"></i> إجازة';
+                    }
+
+                    let row = `<tr>
+                        <td style="font-weight:700;"><i class="ph-fill ph-user-md" style="color:var(--text-muted); margin-left:8px;"></i>${doc.name}</td>
+                        <td>${doc.specialty}</td>
+                        <td>${doc.branch}</td>
+                        <td><span class="status-badge ${badgeClass}">${cleanStatus}</span></td>
+                        <td><button onclick="alert('جاري التحويل لـ ${doc.name}')">تحويل مكالمة <i class="ph ph-phone-call"></i></button></td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            } catch (error) {
+                tbody.innerHTML = "<tr><td colspan='5' class='error' style='text-align:center;'>فشل اتصال البيانات. الرجاء المحاولة مرة أخرى.</td></tr>";
+            }
+        };
+
         window.onload = loadDoctors;
-        // تحديث تلقائي كل 30 ثانية
         setInterval(loadDoctors, 30000); 
     </script>
 </body>
