@@ -9,7 +9,7 @@ function doPost(e) {
     // محاكاة سريعة لتسجيل الدخول (طبعاً هتربطها بجدول Users لاحقاً)
     if (data.email === 'admin@test.com' && data.password === '123') {
       response = { status: 'success', role: 'callcenter', url: 'callcenter.html' };
-    } else if (data.email === 'doc@test.com' && data.password === '123') {
+    } else if ((data.email === 'doc@test.com' || data.email === 'dre' || data.email === 'dre@test.com') && data.password === '123') {
       response = { status: 'success', role: 'doctor', url: 'doctor.html' };
     } else {
       response = { status: 'error', message: 'بيانات غير صحيحة' };
