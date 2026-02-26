@@ -1,5 +1,5 @@
 // ⚠️ هام جداً: حط اللينك اللي هيطلعلك من Apps Script هنا
-const API_URL = 'رابط_الـ_WEB_APP_بتاعك_هنا';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwItGGtaIET4Bt7RQNLDqyBdlu-GgQoFjQG2N0zL2dYCLExPBuZ7R8gnX8qrdQ7gWvL/exec';
 
 // 1. دالة تسجيل الدخول
 async function login() {
@@ -14,7 +14,7 @@ async function login() {
             method: 'POST',
             body: JSON.stringify({ action: 'login', email: email, password: password })
         });
-        
+
         let result = await response.json();
         if (result.status === 'success') {
             window.location.href = result.url; // توجيه للشاشة المناسبة
@@ -34,7 +34,7 @@ async function loadDoctors() {
     try {
         let response = await fetch(API_URL + "?action=getDoctors");
         let doctors = await response.json();
-        
+
         tbody.innerHTML = "";
         doctors.forEach(doc => {
             let row = `<tr>
@@ -61,7 +61,7 @@ async function checkInOut(type) {
             method: 'POST',
             body: JSON.stringify({ action: 'checkInOut', type: type })
         });
-        
+
         let result = await response.json();
         statusMsg.innerText = result.message;
         statusMsg.style.color = type === 'in' ? 'green' : 'red';
